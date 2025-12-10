@@ -1,0 +1,7 @@
+{
+  "name": "NexusAI Project Manager",
+  "description": "An AI-powered project management suite capable of multimodal project creation, automated task breakdown, risk assessment, and predictive reporting.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
