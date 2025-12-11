@@ -212,7 +212,7 @@ export const ProjectCreate: React.FC<ProjectCreateProps> = ({ onProjectCreated, 
         <div className="relative flex-1 mb-6 group">
            <textarea
              className={`w-full h-full min-h-[200px] p-6 text-lg leading-relaxed border-2 rounded-xl outline-none resize-none transition-all
-               bg-transparent text-slate-900 dark:text-slate-100
+               bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 placeholder-slate-400
                ${isRecording ? 'border-red-400 bg-red-50/30 dark:bg-red-900/10' : 'border-slate-200 dark:border-slate-700 focus:border-indigo-500 dark:focus:border-indigo-500'}
                ${isTranscribing ? 'opacity-70 cursor-wait' : ''}
              `}

@@ -28,23 +28,22 @@ export const Sidebar: React.FC<SidebarProps> = ({
   return (
     <>
       {/* Mobile Overlay */}
-      {isOpen && (
-        <div 
-          className="fixed inset-0 bg-slate-900/50 z-40 md:hidden animate-fade-in"
-          onClick={onClose}
-          aria-hidden="true"
-        />
-      )}
+      <div 
+        className={`fixed inset-0 bg-slate-900/50 z-40 md:hidden transition-opacity duration-300 ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+        onClick={onClose}
+        aria-hidden="true"
+      />
 
       <aside 
         className={`
-          fixed inset-y-0 left-0 z-50 bg-slate-900 text-slate-300 flex flex-col flex-shrink-0 transition-all duration-300 transform 
+          fixed inset-y-0 left-0 z-50 bg-slate-900 text-slate-300 flex flex-col flex-shrink-0 transition-transform duration-300 ease-in-out
           ${isOpen ? 'translate-x-0' : '-translate-x-full'} 
           ${collapsed ? 'md:w-20' : 'md:w-64'}
           md:relative md:translate-x-0 md:h-full
         `}
         role="navigation"
         aria-label="Main Navigation"
+        aria-expanded={isOpen}
       >
         <div className={`p-6 flex items-center ${collapsed ? 'justify-center' : 'justify-between'} h-16`}>
           {!collapsed && (

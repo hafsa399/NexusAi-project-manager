@@ -14,10 +14,10 @@ import { authService } from './services/authService';
 const INITIAL_TEAM: TeamMember[] = [
   { 
     id: 'u1', 
-    name: 'Alice Chen', 
-    role: 'Frontend Lead', 
+    name: 'Ali', 
+    role: 'Frontend Developer', 
     skills: ['React', 'TypeScript', 'Tailwind'], 
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Alice' 
+    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Ali' 
   },
   { 
     id: 'u2', 
@@ -28,10 +28,10 @@ const INITIAL_TEAM: TeamMember[] = [
   },
   { 
     id: 'u3', 
-    name: 'Charlie Kim', 
+    name: 'Ayesha', 
     role: 'UI/UX Designer', 
-    skills: ['Figma', 'CSS', 'User Research'], 
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Charlie' 
+    skills: ['Figma', 'Prototyping', 'User Research'], 
+    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Ayesha' 
   },
   { 
     id: 'u4', 
@@ -48,6 +48,13 @@ const getRelativeDate = (daysOffset: number) => {
   d.setDate(d.getDate() + daysOffset);
   return d.toISOString().split('T')[0];
 };
+
+// DEMO DATA DEFINITIONS
+const DEMO_TEAM_MEMBERS: TeamMember[] = [
+  { id: 'u-demo-1', name: 'Hafsa', role: 'Project Manager', skills: ['Agile', 'Leadership', 'Scrum'], avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Hafsa' },
+];
+
+const DEMO_PROJECT_ID = 'p-demo-1';
 
 // Cleaned project list - Uses dynamic dates to ensure validity
 const INITIAL_PROJECTS: Project[] = [
@@ -86,7 +93,7 @@ const INITIAL_PROJECTS: Project[] = [
         status: TaskStatus.InProgress, 
         priority: Priority.Critical, 
         estimatedHours: 16,
-        assigneeId: 'u3',
+        assigneeId: 'u3', // Assigned to Ayesha
         deadline: getRelativeDate(5), // Due in 5 days
         history: [
             { id: 'h3', changeType: 'CREATED', description: 'Task created', timestamp: getRelativeDate(-9), actorName: 'System' }
@@ -99,7 +106,7 @@ const INITIAL_PROJECTS: Project[] = [
         status: TaskStatus.Pending, 
         priority: Priority.High, 
         estimatedHours: 24,
-        assigneeId: 'u1',
+        assigneeId: 'u1', // Assigned to Ali
         deadline: getRelativeDate(15), // Due in 15 days
         history: [
             { id: 'h4', changeType: 'CREATED', description: 'Task created', timestamp: getRelativeDate(-9), actorName: 'System' }
@@ -164,6 +171,88 @@ export default function App() {
         setCurrentUser(user);
     }
   }, []);
+
+  // Demo Data Injection Effect
+  useEffect(() => {
+    // 1. Check and Add Demo Team Members
+    let addedTeamMembers = false;
+    const membersToAdd = DEMO_TEAM_MEMBERS.filter(
+      demoMember => !teamMembers.some(existing => existing.id === demoMember.id)
+    );
+
+    if (membersToAdd.length > 0) {
+      setTeamMembers(prev => [...prev, ...membersToAdd]);
+      addedTeamMembers = true;
+    }
+
+    // 2. Check and Add Demo Project
+    const demoProjectExists = projects.some(p => p.id === DEMO_PROJECT_ID);
+    if (!demoProjectExists) {
+      // Construct the project with the full team context
+      const fullTeam = addedTeamMembers ? [...teamMembers, ...membersToAdd] : teamMembers;
+      
+      const demoProject: Project = {
+        id: DEMO_PROJECT_ID,
+        name: 'Website Redesign Initiative',
+        description: 'A sample project to demonstrate the app’s features.',
+        budget: 10000,
+        startDate: getRelativeDate(0),
+        endDate: getRelativeDate(30),
+        techStack: ['React', 'Tailwind', 'Node.js'],
+        progress: 25,
+        risks: [],
+        team: fullTeam,
+        tasks: [
+          { 
+            id: 't-demo-1', 
+            title: 'Create project structure', 
+            description: 'Setup repo and base config', 
+            status: TaskStatus.Pending, 
+            priority: Priority.High, 
+            estimatedHours: 4, 
+            assigneeId: 'u1', // Ali
+            deadline: getRelativeDate(3),
+            history: [] 
+          },
+          { 
+            id: 't-demo-2', 
+            title: 'Design homepage UI', 
+            description: 'Figma mockups for home', 
+            status: TaskStatus.InProgress, 
+            priority: Priority.Medium, 
+            estimatedHours: 8, 
+            assigneeId: 'u3', // Ayesha
+            deadline: getRelativeDate(7),
+            history: [] 
+          },
+          { 
+            id: 't-demo-3', 
+            title: 'Develop login system', 
+            description: 'Auth implementation', 
+            status: TaskStatus.Pending, 
+            priority: Priority.High, 
+            estimatedHours: 12, 
+            assigneeId: 'u1', // Ali
+            deadline: getRelativeDate(14),
+            history: [] 
+          },
+          { 
+            id: 't-demo-4', 
+            title: 'Testing & documentation', 
+            description: 'Ensure quality assurance', 
+            status: TaskStatus.Pending, 
+            priority: Priority.Low, 
+            estimatedHours: 6, 
+            assigneeId: 'u-demo-1', // Hafsa
+            deadline: getRelativeDate(25),
+            history: [] 
+          },
+        ]
+      };
+      
+      setProjects(prev => [demoProject, ...prev]);
+    }
+  }, []); // Run once on mount
 
   // 2. Auto-Save Effects - Wrapped in try/catch to prevent crashes if quota exceeded
   useEffect(() => {
